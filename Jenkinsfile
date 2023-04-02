@@ -1,8 +1,10 @@
 pipeline {
-    agent any {
+    agent any
+        
     stage('Checkout Code') {
     git 'https://github.com/maping/java-maven-calculator-web-app.git'
     }
+        
     stage ('JUnit Test') {
     if (isUnix()) {
          sh "'${mvnHome}/bin/mvn' clean test"
@@ -10,6 +12,7 @@ pipeline {
          bat(/"${mvnHome}\bin\mvn" clean test/)
       }
    }
+        
    stage('Integration Test') {
       if (isUnix()) {
          sh "'${mvnHome}/bin/mvn' integration-test"
@@ -17,6 +20,7 @@ pipeline {
          bat(/"${mvnHome}\bin\mvn" integration-test/)
       }
    }
+        
  /*
    stage('Performance Test') {
       if (isUnix()) {
@@ -26,6 +30,7 @@ pipeline {
       }
    }
   */
+        
   stage('Performance Test') {
       if (isUnix()) {
          sh "'${mvnHome}/bin/mvn' verify"
@@ -33,13 +38,13 @@ pipeline {
          bat(/"${mvnHome}\bin\mvn" verify/)
       }
    }
+        
    stage('Deploy') {
       timeout(time: 10, unit: 'MINUTES') {
            input message: 'Deploy this web app to production ?'
       }
       echo 'Deploy...'
    }
-}
 }
     
     
